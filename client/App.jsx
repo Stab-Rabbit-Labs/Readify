@@ -4,7 +4,7 @@ import Header from './components/Header';
 
 function App() {
   return (
-    <div className ='app' class='w-500 max-w-screen-lg m-auto'>
+    <div  className='w-500 max-w-screen-lg m-auto'>
 
       <Header/>
       <MainContainer />
