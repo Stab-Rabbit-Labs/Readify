@@ -29,6 +29,7 @@ app.get('/', (req, res) => {
   //  res.sendFile(path.resolve(__dirname + 'client' + 'index.html'))
 })
 
+//###Bundle Call? Could be a quick fix for the webpack issues they were having
 app.get('/dist/bundle.js', (req, res) => {
   res.status(200).sendFile(path.join(__dirname, '../dist/bundle.js'))
 })
