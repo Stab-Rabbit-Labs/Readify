@@ -9,7 +9,7 @@ controller.storeToken = (req, res, next) => {
     // added authid and authsec from Minzo's dev app
     const authid = '42c01af939954a35a024a9d4aee4b125'; // these two are from app that we made with spotify
     const authsec = '2992ca8cfd3247098408f04889cd5240';
-     fetch('https://accounts.spotify.com/api/token', {
+    fetch('https://accounts.spotify.com/api/token', {
         // fetch request tells spotify you have the code now and you send this info
         method: 'POST',
         headers: {
@@ -34,26 +34,26 @@ controller.storeToken = (req, res, next) => {
 
 // Possibly modularize google books/spotify/db
 // GOOGLE BOOKS API
-controller.getTitle =  (req, res, next) => {
-  const { title } = req.body;
-  res.locals.title = title;
+controller.getTitle = (req, res, next) => {
+    const { title } = req.body;
+    res.locals.title = title;
 
-  fetch(
-    `https://www.googleapis.com/books/v1/volumes?q=${title}&key=AIzaSyCXUjqCkxkBUW53n9BRZdQpzmtEb6BwYIk`
-  )
-    .then((response) => response.json())
-    .then((result) => {
-      // console.log(
-      //   'bookinfo',
-      //   result.items[0].volumeInfo.imageLinks.thumbnail,
-      //   result.items[0].volumeInfo.description
-      // );
-      res.locals.image = result.items[0].volumeInfo.imageLinks.thumbnail;
-      res.locals.books = result.items[0].volumeInfo.description
-        .split(' ')
-        .filter((word) => word.length > 3);
-      return next();
-    });
+    fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=${title}&key=AIzaSyCXUjqCkxkBUW53n9BRZdQpzmtEb6BwYIk`
+    )
+        .then((response) => response.json())
+        .then((result) => {
+            // console.log(
+            //   'bookinfo',
+            //   result.items[0].volumeInfo.imageLinks.thumbnail,
+            //   result.items[0].volumeInfo.description
+            // );
+            res.locals.image = result.items[0].volumeInfo.imageLinks.thumbnail;
+            res.locals.books = result.items[0].volumeInfo.description
+                .split(' ')
+                .filter((word) => word.length > 3);
+            return next();
+        });
 };
 
 controller.createPlaylist = (req, res, next) => {
@@ -76,93 +76,92 @@ controller.createPlaylist = (req, res, next) => {
         }),
     })
         .then((response) => {
-          return response.json()
+            return response.json();
         })
         .then((result) => {
-          res.locals.playlist_id = result.id;
-          return next();
-    })
+            res.locals.playlist_id = result.id;
+            return next();
+        });
 };
 
 controller.getRecommendations = (req, res, next) => {
-  // ArtistSeed and trackSeed currently hardcoded to have a "starter" playlist.
-  const artistSeed = '4NHQUGzhtTLFvgF5SZesLK';
-  const trackSeed = '0c6xIDDpzE81m2q797ordA';
-  const genreSeed = res.locals.books;
-  
-  fetch(
-    `https://api.spotify.com/v1/recommendations?seed_artists=${artistSeed}&seed_tracks=${trackSeed}&seed_genre${genreSeed.join(
-      ','
-    )}`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${res.locals.token}`,
-      },
-    }
-  )
-    .then((data) => data.json())
-    .then((data) => {
-      // console.log(data.tracks.map((track) => track.uri));
-      res.locals.tracks = data.tracks.map((track) => track.uri);
-      return next();
-    });
+    // ArtistSeed and trackSeed currently hardcoded to have a "starter" playlist.
+    const artistSeed = '4NHQUGzhtTLFvgF5SZesLK';
+    const trackSeed = '0c6xIDDpzE81m2q797ordA';
+    const genreSeed = res.locals.books;
+
+    fetch(
+        `https://api.spotify.com/v1/recommendations?seed_artists=${artistSeed}&seed_tracks=${trackSeed}&seed_genre${genreSeed.join(
+            ','
+        )}`,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${res.locals.token}`,
+            },
+        }
+    )
+        .then((data) => data.json())
+        .then((data) => {
+            // console.log(data.tracks.map((track) => track.uri));
+            res.locals.tracks = data.tracks.map((track) => track.uri);
+            return next();
+        });
 };
 
 controller.addTracks = (req, res, next) => {
-  fetch(
-    `https://api.spotify.com/v1/playlists/${res.locals.playlist_id}/tracks`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${res.locals.token}`,
-      },
-      body: JSON.stringify({
-        uris: res.locals.tracks,
-      }),
-    }
-  ).then((data) => next());
+    fetch(
+        `https://api.spotify.com/v1/playlists/${res.locals.playlist_id}/tracks`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${res.locals.token}`,
+            },
+            body: JSON.stringify({
+                uris: res.locals.tracks,
+            }),
+        }
+    ).then((data) => next());
 };
 
 //SAVE title and playlist for tracks into SQL DB
 controller.saveToDB = (req, res, next) => {
-  const arr = [res.locals.title, res.locals.playlist_id, 1];
-  const historyCreate =
-    'INSERT INTO history (title, playlist_id, user_id) VALUES ($1, $2, $3)';
+    const arr = [res.locals.title, res.locals.playlist_id, 1];
+    const historyCreate =
+        'INSERT INTO history (title, playlist_id, user_id) VALUES ($1, $2, $3)';
 
-  db.query(historyCreate, arr)
-    .then((data) => {
-      return next();
-    })
-    .catch((err) => {
-      return next({
-        log: `controller.saveToDB: ERROR: ${err}`,
-        message: {
-          err: 'Error occurred in controller.saveToDB. Check server logs for more details.',
-        },
-      });
-    });
+    db.query(historyCreate, arr)
+        .then((data) => {
+            return next();
+        })
+        .catch((err) => {
+            return next({
+                log: `controller.saveToDB: ERROR: ${err}`,
+                message: {
+                    err: 'Error occurred in controller.saveToDB. Check server logs for more details.',
+                },
+            });
+        });
 };
 
 controller.sendDataBackToFront = (req, res, next) => {
-  // ### replace user_id = 1 with variable from current user
-  const historySelect = 'SELECT * FROM history WHERE user_id = 1';
-  db.query(historySelect)
-    .then((data) => {
-      res.locals.fromDB = data.rows;
-      return next();
-    })
-    .catch((err) => {
-      return next({
-        log: `controller.sendDataBackToFront: ERROR: ${err}`,
-        message: {
-          err: 'Error occurred in controller.sendDataBackToFront. Check server logs for more details.',
-        },
-      });
-    });
+    // ### replace user_id = 1 with variable from current user
+    const historySelect = 'SELECT * FROM history WHERE user_id = 1';
+    db.query(historySelect)
+        .then((data) => {
+            res.locals.fromDB = data.rows;
+            return next();
+        })
+        .catch((err) => {
+            return next({
+                log: `controller.sendDataBackToFront: ERROR: ${err}`,
+                message: {
+                    err: 'Error occurred in controller.sendDataBackToFront. Check server logs for more details.',
+                },
+            });
+        });
 };
-
 
 module.exports = controller;
