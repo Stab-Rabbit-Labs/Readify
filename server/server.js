@@ -1,8 +1,5 @@
 const path = require('path');
-const fs = require('file-system');
 const express = require('express');
-const cors = require('cors');
-const querystring = require('querystring');
 const controller = require('./controller');
 
 const app = express();
@@ -12,21 +9,15 @@ const router = require('./router.js');
 const PORT = 3000;
 
 app.use(express.json());
-//app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.resolve(__dirname, '../client')));
-// app.use('/client',express.static(path.resolve(__dirname, './client')));
 
 // Minzo: on get req to /, send index.html
 
 app.get('/', (req, res) => {
     res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
-    //  res.sendFile(path.resolve(__dirname + 'client' + 'index.html'))
 });
 
-// Minzo: idk why we would want bundle, but get bundle?
-
-//###Bundle Call? Could be a quick fix for the webpack issues they were having
 app.get('/dist/bundle.js', (req, res) => {
     res.status(200).sendFile(path.join(__dirname, '../dist/bundle.js'));
 });
