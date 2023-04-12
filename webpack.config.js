@@ -48,7 +48,15 @@ module.exports = {
         // proxy setting to be included
         proxy: {
             '/api': {
-                target: 'http://localhost:3000/',
+                target: 'http://localhost:3000',
+                secure: false,
+            },
+             '/login': {
+                target: 'http://localhost:3000',
+                secure: false,
+            },
+              '/history': {
+                target: 'http://localhost:3000',
                 secure: false,
             },
         },
