@@ -3,6 +3,7 @@ const { Mongoose, model } = require('mongoose');
 const { History } = require('./model');
 const ObjectId = require('mongodb').ObjectId;
 const { Buffer } = require('buffer');
+const db = require('./model.js');
 
 const controller = {};
 
@@ -139,12 +140,18 @@ controller.addTracks = async (req, res, next) => {
 
 //SAVE title and playlist for tracks into DB
 controller.saveToDB = (req, res, next) => {
-    History.create({
-        title: res.locals.title,
-        playlistId: res.locals.playlistId,
-    })
+    // Replace MongoDB call with SQL call
+
+    const arr = [res.locals.title, res.locals.playlistId, 1];
+    const historyCreate =
+        'INSERT INTO history (title, playlist_id, user_id) VALUES ($1, $2, $3)';
+
+    db.query(historyCreate, arr)
         .then((data) => {
-            //console.log(data);
+            console.log(
+                'response from successful query in historyCreate middleware:',
+                data
+            );
             return next();
         })
         .catch((err) => {
@@ -155,7 +162,56 @@ controller.saveToDB = (req, res, next) => {
                 },
             });
         });
+
+    // History.create({ title: res.locals.title, playlistId: res.locals.playlistId })
+    // .then(data => {
+    //   //console.log(data);
+    //   return next();
+    // })
+    // .catch(err => {
+    //   return next({
+    //   log: `controller.saveToDB: ERROR: ${err}`,
+    //   message: { err: 'Error occurred in controller.saveToDB. Check server logs for more details.' }
+    //   })
+    //  })
 };
+
+controller.sendDataBackToFront = (req, res, next) => {
+    //return SQL database from object.rows
+
+    // ### replace user_id = 1 with variable from current
+    const historySelect = 'SELECT * FROM history WHERE user_id = 1';
+    db.query(historySelect)
+        .then((data) => {
+            console.log(
+                'returned data.rows from successful query in sendDataBacktoFront middleware:',
+                data.rows
+            );
+            res.locals.fromDB = data.rows;
+            return next();
+        })
+        .catch((err) => {
+            return next({
+                log: `controller.sendDataBackToFront: ERROR: ${err}`,
+                message: {
+                    err: 'Error occurred in controller.sendDataBackToFront. Check server logs for more details.',
+                },
+            });
+        });
+};
+
+//  History.find()
+//     .then(data => {
+//       console.log('returned data.rows from successful query in sendDataBacktoFront middleware:', data.rows)
+//       res.locals.fromDB = data
+//       return next()
+//      })
+//     .catch(err => {
+//       return next({
+//       log: `controller.sendDataBackToFront: ERROR: ${err}`,
+//       message: { err: 'Error occurred in controller.sendDataBackToFront. Check server logs for more details.' }
+//       })
+//      })
 
 controller.sendDataBackToFront = (req, res, next) => {
     History.find()

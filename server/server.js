@@ -36,6 +36,7 @@ app.get('/', (req, res) => {
 
 // Minzo: idk why we would want bundle, but get bundle?
 
+//###Bundle Call? Could be a quick fix for the webpack issues they were having
 app.get('/dist/bundle.js', (req, res) => {
     res.status(200).sendFile(path.join(__dirname, '../dist/bundle.js'));
 });
