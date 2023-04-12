@@ -25,7 +25,7 @@ controller.storeToken = async (req, res, next) => {
             // 'Authorization': 'Basic ' + btoa(authid + ':' + authsec),
         },
         body: `grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(
-            'http://localhost:3000/api/callback'
+            'http://localhost:8080/api/callback'
         )}`, // this is basically the request being sent out
     })
         .then((data) => data.json())
@@ -33,6 +33,7 @@ controller.storeToken = async (req, res, next) => {
             console.log('this is the access token', data.access_token);
             // this doesn't actually do anything
             res.locals.token = data.access_token;
+            // save token to controller to have access in other areas.
             controller.token = data.access_token;
             next();
         }); // data will include access token which you can use in subsequent fetch requests to the spotify API
@@ -87,7 +88,7 @@ controller.createPlaylist = async (req, res, next) => {
     })
         .then((response) => response.json())
         .then((result) => {
-            console.log('playlist', result.id);
+            console.log('this is the playlist id from create playlist middleware', result.id);
 
             res.locals.playlist_id = result.id;
             return next();
@@ -149,10 +150,10 @@ controller.saveToDB = (req, res, next) => {
 
     db.query(historyCreate, arr)
         .then((data) => {
-            console.log(
-                'response from successful query in historyCreate middleware:',
-                data
-            );
+            // console.log(
+            //     'response from successful query in historyCreate middleware:',
+            //     data
+            // );
             return next();
         })
         .catch((err) => {
@@ -214,21 +215,21 @@ controller.sendDataBackToFront = (req, res, next) => {
 //       })
 //      })
 
-controller.sendDataBackToFront = (req, res, next) => {
-    History.find()
-        .then((data) => {
-            //console.log(data)
-            res.locals.fromDB = data;
-            return next();
-        })
-        .catch((err) => {
-            return next({
-                log: `controller.sendDataBackToFront: ERROR: ${err}`,
-                message: {
-                    err: 'Error occurred in controller.sendDataBackToFront. Check server logs for more details.',
-                },
-            });
-        });
-};
+// controller.sendDataBackToFront = (req, res, next) => {
+//     History.find()
+//         .then((data) => {
+//             //console.log(data)
+//             res.locals.fromDB = data;
+//             return next();
+//         })
+//         .catch((err) => {
+//             return next({
+//                 log: `controller.sendDataBackToFront: ERROR: ${err}`,
+//                 message: {
+//                     err: 'Error occurred in controller.sendDataBackToFront. Check server logs for more details.',
+//                 },
+//             });
+//         });
+// };
 
 module.exports = controller;

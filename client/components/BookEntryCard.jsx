@@ -4,7 +4,8 @@ import PlayerCard from "./PlayerCard";
 function BookEntryCard() {
   const [cardState, setCardState] = useState({
     bookName: '',
-    playlistId: '37i9dQZF1DWZwtERXCS82H', //can we have somethin as default to not have "page not"
+    // currently playlist ID is hardcoded.
+    playlistId: '03aZFmtQSw1Ys9p4ximtJJ',//'37i9dQZF1DWZwtERXCS82H', //can we have somethin as default to not have "page not"
     imgURL: ''
   })
 
@@ -18,7 +19,7 @@ function BookEntryCard() {
     })
     .then(data => data.json())
     .then(data => {
-      console.log(data.playlistId);
+      console.log('this should be the playlist ID from bookentry', data.playlistId);
       setCardState({...cardState, playlistId: data.playlistId, imgURL: data.imageURL})
     });
   }
