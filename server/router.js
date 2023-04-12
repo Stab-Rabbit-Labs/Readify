@@ -43,7 +43,9 @@ router.post(
 // we get redirect from spotify to go redirect URL
 
 // Minzo: this is a post request, after login, post request coming from spotify.
-router.post('/callback', controller.storeToken, (req, res) => {
+router.use('/callback', controller.storeToken, (req, res) => {
+    console.log('have made it to the /callback');
+    console.log(controller.token);
     return res.status(200).redirect('/'); // double check this address when we start trying to get the client to work
 });
 

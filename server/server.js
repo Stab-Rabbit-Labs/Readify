@@ -9,16 +9,6 @@ const app = express();
 
 const router = require('./router.js');
 
-// Minzo: Connect to a mongo db. Will have to change to SQL.
-// const mongoose = require('mongoose');
-// mongoose.connect(
-//     'mongodb+srv://readify:123@cluster0.9zelvyu.mongodb.net/?retryWrites=true&w=majority',
-//     { useNewUrlParser: true, useUnifiedTopology: true }
-// );
-// mongoose.connection.once('open', () => {
-//     console.log('Connected to Database');
-// });
-
 const PORT = 3000;
 
 app.use(express.json());

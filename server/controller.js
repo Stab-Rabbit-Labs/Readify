@@ -8,6 +8,7 @@ const db = require('./model.js');
 const controller = {};
 
 controller.storeToken = async (req, res, next) => {
+    console.log('made it to storeToken');
     const code = req.query.code; // code we receive from spotify to verify, we get it from the get request to /login
     // added authid and authsec from Minzo's dev app
     const authid = '42c01af939954a35a024a9d4aee4b125'; // these two are from app that we made with spotify
@@ -29,7 +30,7 @@ controller.storeToken = async (req, res, next) => {
     })
         .then((data) => data.json())
         .then((data) => {
-            console.log('ths is the access token', data.access_token);
+            console.log('this is the access token', data.access_token);
             // this doesn't actually do anything
             res.locals.token = data.access_token;
             controller.token = data.access_token;
@@ -88,7 +89,7 @@ controller.createPlaylist = async (req, res, next) => {
         .then((result) => {
             console.log('playlist', result.id);
 
-            res.locals.playlistId = result.id;
+            res.locals.playlist_id = result.id;
             return next();
         });
 };
@@ -124,7 +125,7 @@ controller.getRecommendations = async (req, res, next) => {
 
 controller.addTracks = async (req, res, next) => {
     await fetch(
-        `https://api.spotify.com/v1/playlists/${res.locals.playlistId}/tracks`,
+        `https://api.spotify.com/v1/playlists/${res.locals.playlist_id}/tracks`,
         {
             method: 'POST',
             headers: {
@@ -142,7 +143,7 @@ controller.addTracks = async (req, res, next) => {
 controller.saveToDB = (req, res, next) => {
     // Replace MongoDB call with SQL call
 
-    const arr = [res.locals.title, res.locals.playlistId, 1];
+    const arr = [res.locals.title, res.locals.playlist_id, 1];
     const historyCreate =
         'INSERT INTO history (title, playlist_id, user_id) VALUES ($1, $2, $3)';
 
@@ -163,7 +164,7 @@ controller.saveToDB = (req, res, next) => {
             });
         });
 
-    // History.create({ title: res.locals.title, playlistId: res.locals.playlistId })
+    // History.create({ title: res.locals.title, playlist_id: res.locals.playlist_id })
     // .then(data => {
     //   //console.log(data);
     //   return next();
