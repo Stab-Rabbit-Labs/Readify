@@ -55,10 +55,10 @@ app.get('/login', function (req, res) {
 
 // Minzo: on getting history, sends back info from DB to res.locals.
 
-// app.get('/history', controller.sendDataBackToFront, (req, res) => {
-//     const historyData = res.locals.fromDB;
-//     res.status(200).send(historyData);
-// });
+app.get('/history', controller.sendDataBackToFront, (req, res) => {
+    const historyData = res.locals.fromDB;
+    res.status(200).send(historyData);
+});
 
 // Minzo: connecting front to back I believe, according to the webpack.
 
