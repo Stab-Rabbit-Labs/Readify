@@ -15,17 +15,17 @@ const controller = require('./controller');
 
 // GET BOOK
 router.post(
-    '/get-title',
-    controller.getTitle,
-    controller.createPlaylist,
-    controller.getRecommendations,
-    controller.addTracks,
-    controller.saveToDB,
-    (req, res) => {
-        const playlistId = res.locals.playlist_id;
-        const imageURL = res.locals.image;
-        res.status(200).send({ playlistId: playlistId, imageURL: imageURL });
-    }
+  '/get-title',
+  controller.getTitle,
+  controller.createPlaylist,
+  controller.getRecommendations,
+  controller.addTracks,
+  controller.saveToDB,
+  (req, res) => {
+    const playlist_id = res.locals.playlist_id;
+    const imageURL = res.locals.image;
+    res.status(200).send({ playlist_id: playlist_id, imageURL: imageURL });
+  }
 );
 
 // router.get('/login', function(req, res) {
