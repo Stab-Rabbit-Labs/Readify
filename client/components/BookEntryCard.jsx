@@ -4,7 +4,7 @@ import PlayerCard from './PlayerCard';
 function BookEntryCard() {
   const [cardState, setCardState] = useState({
     bookName: '',
-    playlist_id: '37i9dQZF1DWZwtERXCS82H', //can we have somethin as default to not have "page not"
+    playlist_id: '37i9dQZF1DWZwtERXCS82H', //default playlist
     imgURL: '',
   });
 
@@ -18,7 +18,6 @@ function BookEntryCard() {
     })
       .then((data) => data.json())
       .then((data) => {
-        console.log(data.playlist_id);
         setCardState({
           ...cardState,
           playlist_id: data.playlist_id,

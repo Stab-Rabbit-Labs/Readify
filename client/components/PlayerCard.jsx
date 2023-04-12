@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-// const [image, setImage] = useState('')
-
-// useEffect()
-
 function PlayerCard(props) {
   return (
     <div className="inline">
@@ -13,7 +9,6 @@ function PlayerCard(props) {
         width="50%"
         height="380"
         frameBorder="0"
-        allowFullScreen="" /*allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"*/
       ></iframe>
       <div className="bg-red">
         <img className="h-380 max-w-xsm-auto" src={props.imageURL} />
