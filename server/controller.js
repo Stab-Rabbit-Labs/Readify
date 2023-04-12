@@ -8,34 +8,35 @@ const db = require('./model.js');
 const controller = {};
 
 controller.storeToken = async (req, res, next) => {
-  console.log('made it to storeToken');
-  const code = req.query.code; // code we receive from spotify to verify, we get it from the get request to /login
-  // added authid and authsec from Minzo's dev app
-  const authid = '42c01af939954a35a024a9d4aee4b125'; // these two are from app that we made with spotify
-  const authsec = '2992ca8cfd3247098408f04889cd5240';
-  await fetch('https://accounts.spotify.com/api/token', {
-    // fetch request tells spotify you have the code now and you send this info
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization:
-        'Basic ' +
-        // added base64 of Minzo's app
-        'NDJjMDFhZjkzOTk1NGEzNWEwMjRhOWQ0YWVlNGIxMjU6Mjk5MmNhOGNmZDMyNDcwOTg0MDhmMDQ4ODljZDUyNDA=', // this is the base 64 of the authid and authsec with colon in middle
-      // 'Authorization': 'Basic ' + btoa(authid + ':' + authsec),
-    },
-    body: `grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(
-      'http://localhost:3000/api/callback'
-    )}`, // this is basically the request being sent out
-  })
-    .then((data) => data.json())
-    .then((data) => {
-      console.log('this is the access token', data.access_token);
-      // this doesn't actually do anything
-      res.locals.token = data.access_token;
-      controller.token = data.access_token;
-      next();
-    }); // data will include access token which you can use in subsequent fetch requests to the spotify API
+    console.log('made it to storeToken');
+    const code = req.query.code; // code we receive from spotify to verify, we get it from the get request to /login
+    // added authid and authsec from Minzo's dev app
+    const authid = '42c01af939954a35a024a9d4aee4b125'; // these two are from app that we made with spotify
+    const authsec = '2992ca8cfd3247098408f04889cd5240';
+    await fetch('https://accounts.spotify.com/api/token', {
+        // fetch request tells spotify you have the code now and you send this info
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Authorization:
+                'Basic ' +
+                // added base64 of Minzo's app
+                'NDJjMDFhZjkzOTk1NGEzNWEwMjRhOWQ0YWVlNGIxMjU6Mjk5MmNhOGNmZDMyNDcwOTg0MDhmMDQ4ODljZDUyNDA=', // this is the base 64 of the authid and authsec with colon in middle
+            // 'Authorization': 'Basic ' + btoa(authid + ':' + authsec),
+        },
+        body: `grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(
+            'http://localhost:8080/api/callback'
+        )}`, // this is basically the request being sent out
+    })
+        .then((data) => data.json())
+        .then((data) => {
+            console.log('this is the access token', data.access_token);
+            // this doesn't actually do anything
+            res.locals.token = data.access_token;
+            // save token to controller to have access in other areas.
+            controller.token = data.access_token;
+            next();
+        }); // data will include access token which you can use in subsequent fetch requests to the spotify API
 };
 // Minzo: they also have a getToken that they've commented out. Will need to create a getToken middleware function
 //        Possibly modularize google books/spotify/db
@@ -66,29 +67,28 @@ controller.getTitle = async (req, res, next) => {
 };
 
 controller.createPlaylist = async (req, res, next) => {
-  // Minzo: THIS IS WHERE WE'VE HARDCODED, WE NEED TO PASS IT IN.
-  const token = controller.token;
-  console.log('TOKEN FROM CREATE PLAYLIST MIDDLEWARE', token);
-  // 'BQCBhAnAat3_qGeFr1jhj-Z8O_qsPOkDgksh0icWmnDB9CY92Asa7rgEO9iHlQ4UoOd5-Ak8YjZgIsI8bSYMhKK5SCfDiTO4j6tXtEf3T4fYSE4lOFR8PlAKHOwDfjEUGMAtwxgOHZx_GAsFwkihaVUUA2Lmc2WyRiFWNRhfCeuiR_qmwLxX6CWI5oDOVLtoQR9leod2RIgsUjTqtSvxjH01af5kg5PbBJUIJVpEZn-oWyWl9K9oII38lWQJqQ';
-  res.locals.token = token;
-  // Minzo: need to have your own spotify account
-  // added 1219159519 as minzo's spotify account
-  await fetch(`https://api.spotify.com/v1/users/${'1219159519'}/playlists`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: res.locals.title,
-        description: '',
-        public: false,
-      }),
-    }
-  )
-    .then((response) => response.json())
-    .then((result) => {
-      console.log('playlist', result.id);
+    // Minzo: THIS IS WHERE WE'VE HARDCODED, WE NEED TO PASS IT IN.
+    const token = controller.token;
+    console.log('TOKEN FROM CREATE PLAYLIST MIDDLEWARE', token);
+    // 'BQCBhAnAat3_qGeFr1jhj-Z8O_qsPOkDgksh0icWmnDB9CY92Asa7rgEO9iHlQ4UoOd5-Ak8YjZgIsI8bSYMhKK5SCfDiTO4j6tXtEf3T4fYSE4lOFR8PlAKHOwDfjEUGMAtwxgOHZx_GAsFwkihaVUUA2Lmc2WyRiFWNRhfCeuiR_qmwLxX6CWI5oDOVLtoQR9leod2RIgsUjTqtSvxjH01af5kg5PbBJUIJVpEZn-oWyWl9K9oII38lWQJqQ';
+    res.locals.token = token;
+    // Minzo: need to have your own spotify account
+    // added 1219159519 as minzo's spotify account
+    await fetch(`https://api.spotify.com/v1/users/${'1219159519'}/playlists`, {
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            name: res.locals.title,
+            description: '',
+            public: false,
+        }),
+    })
+        .then((response) => response.json())
+        .then((result) => {
+            console.log('this is the playlist id from create playlist middleware', result.id);
 
       res.locals.playlist_id = result.id;
       return next();

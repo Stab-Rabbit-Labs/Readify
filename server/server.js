@@ -20,7 +20,7 @@ app.use(express.static(path.resolve(__dirname, '../client')));
 // Minzo: on get req to /, send index.html
 
 app.get('/', (req, res) => {
-    res.status(200).sendFile(path.join(__dirname, '../dist/index.html'));
+    res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
     //  res.sendFile(path.resolve(__dirname + 'client' + 'index.html'))
 });
 
@@ -44,7 +44,7 @@ app.get('/login', function (req, res) {
     params.append('client_id', '42c01af939954a35a024a9d4aee4b125');
     // Minzo: next step have to whitelist URI.
     // need to send to the correct URI, not callback. Thinking straight to middleware.
-    params.append('redirect_uri', 'http://localhost:3000/api/callback');
+    params.append('redirect_uri', 'http://localhost:8080/api/callback');
     params.append('scope', scope); // spotify requires URL encoded, not json
 
     //var state = generateRandomString(16);

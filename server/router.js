@@ -44,9 +44,9 @@ router.post(
 
 // Minzo: this is a post request, after login, post request coming from spotify.
 router.use('/callback', controller.storeToken, (req, res) => {
-  console.log('have made it to the /callback');
-  console.log(controller.token);
-  return res.status(200).redirect('/'); // double check this address when we start trying to get the client to work
+    console.log('have made it to the /callback, this is the token', controller.token);
+    // console.log(controller.token);
+    return res.status(200).redirect('/'); // double check this address when we start trying to get the client to work
 });
 
 // TEST SAMPLE ONLY ONE ADDRESS FOR EACH REQUEST
@@ -57,4 +57,4 @@ router.use('/callback', controller.storeToken, (req, res) => {
 //     .send('sendingggg') //working
 // });
 
-module.exports = router;
+module.exports = router;  
