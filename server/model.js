@@ -46,23 +46,27 @@ module.exports = {
 
 const { Pool } = require('pg')
 
-
-
-//PGI URL: postgres://pgynxjrw:IDgXOQHBjrWC5MPuv5jY2IedwcVmildD@ziggy.db.elephantsql.com/pgynxjrw
+PGI_URL: 'postgres://pgynxjrw:IDgXOQHBjrWC5MPuv5jY2IedwcVmildD@ziggy.db.elephantsql.com/pgynxjrw'
 //Password: IDgXOQHBjrWC5MPuv5jY2IedwcVmildD
 
-// // create row in history table with SQL query, title is 'Gulliver's Travels', playlistId is '456'
-// INSERT INTO History (title, playlistId) VALUES ('Gullivers Travels', '456');
+const pool = new Pool({
+  connectionString: PG_URL
+});
+
+module.exports = {
+  query: (text, params, callback) => {
+    console.log('executed query', text);
+    return pool.query(text, params, callback);
+  },
+};
+
+
 
 // SQL Table: history
 // --- --- --- --- --- --- --- --- ---
-// id | title | playlistId
+// id | title | playlist_id | user_id
 // --- --- --- --- --- --- --- --- ---
 // id SERIAL PRIMARY KEY
 // title VARCHAR NOT NULL
-// playlistId VARCHAR NOT NULL
-
-//userId for using join table to pull individual history upon login
-
-//UserSchema is not used at the moment but could be useful for when we do auth -- will have to maybe connect the history table with
-//the user id to pull specific data per user
+// playlist_id VARCHAR NOT NULL
+// user_id INTEGER NOT NULL
