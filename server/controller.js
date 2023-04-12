@@ -51,10 +51,14 @@ controller.getTitle = async (req, res, next) => {
         .then((response) => response.json())
         .then((result) => {
             console.log(
-                'bookinfo',
-                result.items[0].volumeInfo.imageLinks.thumbnail,
-                result.items[0].volumeInfo.imageLinks.description
+                'this is the response from the book in getTitle controller',
+                result
             );
+            // console.log(
+            //     'bookinfo',
+            //     result.items[0].volumeInfo.imageLinks.thumbnail,
+            //     result.items[0].volumeInfo.imageLinks.description
+            // );
             //res.locals.bookInfo = result.items[0].volumeInfo.categories[0]
             res.locals.image = result.items[0].volumeInfo.imageLinks.thumbnail;
             res.locals.books = result.items[0].volumeInfo.description
@@ -98,6 +102,7 @@ controller.getRecommendations = async (req, res, next) => {
     // Minzo: these are required.
     const artistSeed = '4NHQUGzhtTLFvgF5SZesLK';
     const trackSeed = '0c6xIDDpzE81m2q797ordA';
+    //
     const genreSeed = res.locals.books;
     //const genreSeed = 'classical, country';
     // dylan hardcoded artist seed.
@@ -214,21 +219,21 @@ controller.sendDataBackToFront = (req, res, next) => {
 //       })
 //      })
 
-controller.sendDataBackToFront = (req, res, next) => {
-    History.find()
-        .then((data) => {
-            //console.log(data)
-            res.locals.fromDB = data;
-            return next();
-        })
-        .catch((err) => {
-            return next({
-                log: `controller.sendDataBackToFront: ERROR: ${err}`,
-                message: {
-                    err: 'Error occurred in controller.sendDataBackToFront. Check server logs for more details.',
-                },
-            });
-        });
-};
+// controller.sendDataBackToFront = (req, res, next) => {
+//     History.find()
+//         .then((data) => {
+//             //console.log(data)
+//             res.locals.fromDB = data;
+//             return next();
+//         })
+//         .catch((err) => {
+//             return next({
+//                 log: `controller.sendDataBackToFront: ERROR: ${err}`,
+//                 message: {
+//                     err: 'Error occurred in controller.sendDataBackToFront. Check server logs for more details.',
+//                 },
+//             });
+//         });
+// };
 
 module.exports = controller;

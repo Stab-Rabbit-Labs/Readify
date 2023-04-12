@@ -24,6 +24,7 @@ router.post(
     (req, res) => {
         const playlistId = res.locals.playlistId;
         const imageURL = res.locals.image;
+        
         res.status(200).send({ playlistId: playlistId, imageURL: imageURL });
     }
 );
