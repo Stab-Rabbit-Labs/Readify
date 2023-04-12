@@ -43,11 +43,11 @@ controller.getTitle =  (req, res, next) => {
   )
     .then((response) => response.json())
     .then((result) => {
-      console.log(
-        'bookinfo',
-        result.items[0].volumeInfo.imageLinks.thumbnail,
-        result.items[0].volumeInfo.description
-      );
+      // console.log(
+      //   'bookinfo',
+      //   result.items[0].volumeInfo.imageLinks.thumbnail,
+      //   result.items[0].volumeInfo.description
+      // );
       res.locals.image = result.items[0].volumeInfo.imageLinks.thumbnail;
       res.locals.books = result.items[0].volumeInfo.description
         .split(' ')
@@ -61,7 +61,8 @@ controller.createPlaylist = (req, res, next) => {
     console.log('TOKEN FROM CREATE PLAYLIST MIDDLEWARE', token);
     res.locals.token = token;
     // Minzo: need to have your own spotify dev account
-    // added 1219159519 as minzo's spotify account
+    // added 1219159519 as minzo's spotify account as a hard code.
+    //Rachel's userID: 	1240934213
     fetch(`https://api.spotify.com/v1/users/${'1219159519'}/playlists`, {
         method: 'POST',
         headers: {
@@ -74,12 +75,13 @@ controller.createPlaylist = (req, res, next) => {
             public: false,
         }),
     })
-        .then((response) => response.json())
+        .then((response) => {
+          return response.json()
+        })
         .then((result) => {
-          // console.log('Playlist id from create playlist middleware', result.id);
           res.locals.playlist_id = result.id;
           return next();
-    });
+    })
 };
 
 controller.getRecommendations = (req, res, next) => {

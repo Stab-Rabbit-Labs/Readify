@@ -30,16 +30,6 @@ module.exports = {
                 include: path.resolve(__dirname, 'client'),
                 use: ['style-loader', 'css-loader', 'postcss-loader'],
             },
-            //   {
-            //     test: /\.png|svg|jpg|gif$/,
-            //     use: [
-            //         'file-loader'
-            //     ],
-            //  },
-            // {
-            //     test: /\.png|svg|jpg|gif$//,
-            //     type: 'asset/resource'
-            //   }
         ],
     },
     devServer: {
