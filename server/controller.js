@@ -73,11 +73,7 @@ controller.createPlaylist = async (req, res, next) => {
   res.locals.token = token;
   // Minzo: need to have your own spotify account
   // added 1219159519 as minzo's spotify account
-  // added 22nkilsuc6ma2beir5pyhf7jq as alastair's spotify account
-  // await fetch(`https://api.spotify.com/v1/users/${'1219159519'}/playlists`, {
-  await fetch(
-    `https://api.spotify.com/v1/users/${'22nkilsuc6ma2beir5pyhf7jq'}/playlists`,
-    {
+  await fetch(`https://api.spotify.com/v1/users/${'1219159519'}/playlists`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -155,8 +151,7 @@ controller.saveToDB = (req, res, next) => {
   db.query(historyCreate, arr)
     .then((data) => {
       console.log(
-        'response from successful query in historyCreate middleware:',
-        data
+        'response from successful query in historyCreate middleware:'
       );
       return next();
     })
@@ -190,8 +185,7 @@ controller.sendDataBackToFront = (req, res, next) => {
   db.query(historySelect)
     .then((data) => {
       console.log(
-        'returned data.rows from successful query in sendDataBacktoFront middleware:',
-        data.rows
+        'returned data.rows from successful query in sendDataBacktoFront middleware'
       );
       res.locals.fromDB = data.rows;
       return next();
