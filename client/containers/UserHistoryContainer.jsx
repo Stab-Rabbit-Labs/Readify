@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import UserHistoryItem from '../components/UserHistoryItem';
 
+// ### make scrollable
 function UserHistoryContainer() {
   const [history, setHistory] = React.useState({
-    // this will change depending on what we actually take in, can also restruture the objects
     historyItems: [],
   });
-
-  // const handleClick = (e) => {
-  //     console.log(e)
-
-  // }
 
   useEffect(() => {
     fetch('/history')
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         let historyArr = [];
         data.forEach((x) => {
           const histObj = {
@@ -40,11 +34,6 @@ function UserHistoryContainer() {
       <UserHistoryItem
         bookTitle={x.bookTitle}
         playlist_id={x.playlist_id}
-        //handleClick={x.handleClick}
-        // playlist_id={history.playlist_id}
-        // author={x.author}
-        // isInstrumental={x.isInstrumental}
-        // playlistLength={x.playlistLength}
         key={`history-item-${i}`}
       ></UserHistoryItem>
     );
