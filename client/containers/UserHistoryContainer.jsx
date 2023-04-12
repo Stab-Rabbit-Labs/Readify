@@ -25,7 +25,7 @@ function UserHistoryContainer(){
             data.forEach(x=>{
                 const histObj = {
                     bookTitle: x.title,
-                    playlistId: x.playlistId,
+                    playlistId: x.playlist_id,
                 }
                 historyArr.push(histObj)
             })
