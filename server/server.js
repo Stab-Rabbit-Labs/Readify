@@ -1,11 +1,11 @@
 const path = require('path');
 const express = require('express');
-const controller = require('./controller');
-const oauthcontroller = require('./controllers/oauthcontroller');
+// const controller = require('./controller');
+// const oauthcontroller = require('./controllers/oauthcontroller');
 const cookieParser = require('cookie-parser');
 
 const cors = require('cors') 
-const dbController = require('./controller/dbController.js');
+const dbController = require('./controllers/dbController.js');
 
 const app = express();
 app.use(cors());

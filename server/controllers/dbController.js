@@ -6,7 +6,9 @@ const dbController = {};
 
 //SAVE title and playlist for tracks into SQL DB
 dbController.saveToDB = (req, res, next) => {
-    const arr = [res.locals.title, res.locals.playlist_id, 1];
+    let user = req.cookies['User'].toString();
+    console.log('USER__', user)
+    const arr = [res.locals.title, res.locals.playlist_id, user];
     const historyCreate =
         'INSERT INTO history (title, playlist_id, user_id) VALUES ($1, $2, $3)';
 
@@ -26,8 +28,11 @@ dbController.saveToDB = (req, res, next) => {
 
 dbController.sendDataBackToFront = (req, res, next) => {
     // ### replace user_id = 1 with variable from current user
-    const historySelect = 'SELECT * FROM history WHERE user_id = 1';
-    db.query(historySelect)
+    let user = (req.cookies['User']).toString();
+    console.log('USER__2 ', user)
+    const arr = [user]
+    const historySelect = 'SELECT * FROM history WHERE user_id = $1';
+    db.query(historySelect, arr)
         .then((data) => {
             res.locals.fromDB = data.rows;
             return next();

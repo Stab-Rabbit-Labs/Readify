@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 // const controller = require('./controller');
-const bookController = require('./controller/bookController.js');
-const dbController = require('./controller/dbController.js');
-const spotifyController = require('./controller/spotifyController.js');
+const bookController = require('./controllers/bookController.js');
+const dbController = require('./controllers/dbController.js');
+const spotifyController = require('./controllers/spotifyController.js');
 
 // GET BOOK
 router.post(
@@ -28,7 +28,7 @@ router.use('/callback', (req, res) => {
 
 // Minzo: this is a post request, after login, post request coming from spotify.
     // console.log(controller.token);
-    return res.status(200).redirect('/'); // double check this address when we start trying to get the client to work
-});
+//     return res.status(200).redirect('/'); // double check this address when we start trying to get the client to work
+// });
 
 module.exports = router;

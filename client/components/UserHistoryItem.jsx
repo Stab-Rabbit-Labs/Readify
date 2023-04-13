@@ -1,7 +1,6 @@
 import React from 'react';
 
 function UserHistoryItem({ bookTitle, playlist_id }) {
-  console.log('userHistory Item')
   return (
     <div className="flex flex-row justify-between my-10 py-5 px-10 border-2 border-solid border-primary rounded-lg">
       <div className="text-lg">

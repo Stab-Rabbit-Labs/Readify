@@ -24,3 +24,5 @@ module.exports = {
 // title VARCHAR NOT NULL
 // playlist_id VARCHAR NOT NULL
 // user_id INTEGER NOT NULL
+
+// ~truncate~
