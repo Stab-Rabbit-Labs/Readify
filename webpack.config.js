@@ -52,9 +52,25 @@ module.exports = {
         },
         // fallback to root for other urls
         historyApiFallback: true,
+        // added headers into devServer
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+            "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+        }
     },
     resolve: {
         // Enable importing JS / JSX files without specifying their extension
         extensions: ['.js', '.jsx'],
     },
 };
+
+// possible way to get CORS to work, adding it to dev server.
+// devServer: {
+//     ...
+//     headers: {
+//       "Access-Control-Allow-Origin": "*",
+//       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+//       "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+//     }
+//   }

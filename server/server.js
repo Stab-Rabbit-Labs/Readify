@@ -1,9 +1,13 @@
 const path = require('path');
 const express = require('express');
 const controller = require('./controller');
-const oauthcontroller = require('./controllers/oauthcontroller')
+const oauthcontroller = require('./controllers/oauthcontroller');
+const cookieParser = require('cookie-parser');
+
+const cors = require('cors') 
 
 const app = express();
+app.use(cors());
 
 const router = require('./router.js');
 
@@ -12,6 +16,8 @@ const PORT = 3000;
 app.use(express.json());
 
 app.use(express.static(path.resolve(__dirname, '../client')));
+
+app.use(cookieParser());
 
 // Minzo: on get req to /, send index.html
 

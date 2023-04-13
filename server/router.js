@@ -17,6 +17,11 @@ router.post(
   }
 );
 
+router.use('/callback', (req, res) => {
+  // console.log(req)
+  // console.log(`/?code=${req.query.code}`)
+  res.redirect(`/?code=${req.query.code}`)
+})
 
 // Minzo: this is a post request, after login, post request coming from spotify.
 // router.use('/callback', controller.storeToken, (req, res) => {
