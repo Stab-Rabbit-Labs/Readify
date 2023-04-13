@@ -1,8 +1,14 @@
 const path = require('path');
 const express = require('express');
-const dbController = require('./controller/dbController.js');
+// const controller = require('./controller');
+// const oauthcontroller = require('./controllers/oauthcontroller');
+const cookieParser = require('cookie-parser');
+
+const cors = require('cors') 
+const dbController = require('./controllers/dbController.js');
 
 const app = express();
+app.use(cors());
 
 const router = require('./router.js');
 
@@ -11,6 +17,8 @@ const PORT = 3000;
 app.use(express.json());
 
 app.use(express.static(path.resolve(__dirname, '../client')));
+
+app.use(cookieParser());
 
 // Minzo: on get req to /, send index.html
 
@@ -22,27 +30,35 @@ app.get('/dist/bundle.js', (req, res) => {
     res.status(200).sendFile(path.join(__dirname, '../dist/bundle.js'));
 });
 
+
+// app.get('/login', oauthcontroller.start, function (req, res) {
+    
+// })
+
+// ### old GET /login 
 // login and callback are used for autentification (OAuth)
 
 // Minzo: go over this with group, can't wrap my head around it.
-app.get('/login', function (req, res) {
-    // scope is what spotify set and describes what you're allowed to do with the token
-    var scope =
-        'user-read-private user-read-email playlist-modify-public playlist-modify-private';
-    const params = new URLSearchParams();
-    params.append('response_type', 'code');
-    // added minzo's client_id
-    params.append('client_id', '42c01af939954a35a024a9d4aee4b125');
-    // Minzo: next step have to whitelist URI.
-    // need to send to the correct URI, not callback. Thinking straight to middleware.
-    params.append('redirect_uri', 'http://localhost:8080/api/callback');
-    params.append('scope', scope); // spotify requires URL encoded, not json
+// app.get('/login', function (req, res) {
+//     // scope is what spotify set and describes what you're allowed to do with the token
+//     var scope =
+//         'user-read-private user-read-email playlist-modify-public playlist-modify-private';
+//     const params = new URLSearchParams();
+//     params.append('response_type', 'code');
+//     // added minzo's client_id
+//     params.append('client_id', '42c01af939954a35a024a9d4aee4b125');
+//     // Minzo: next step have to whitelist URI.
+//     // need to send to the correct URI, not callback. Thinking straight to middleware.
+//     params.append('redirect_uri', 'http://localhost:8080/api/callback');
+//     params.append('scope', scope); // spotify requires URL encoded, not json
 
-    //var state = generateRandomString(16);
-    res.status(301).redirect(
-        'https://accounts.spotify.com/authorize?' + params.toString()
-    ); // 301 is HTTP code for redirect, the params get put into the string
-});
+//     //var state = generateRandomString(16);
+//     res.status(301).redirect(
+//         'https://accounts.spotify.com/authorize?' + params.toString()
+//     ); // 301 is HTTP code for redirect, the params get put into the string
+// });
+
+
 
 // Minzo: on getting history, sends back info from DB to res.locals.
 

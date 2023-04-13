@@ -32,13 +32,18 @@ spotifyController.storeToken = (req, res, next) => {
 };
 
 spotifyController.createPlaylist = (req, res, next) => {
-    const token = spotifyController.token;
+  console.log('inside middleware Playlist')
+    const token = req.cookies['Token']
+    const user = req.cookies['User']
+    
     console.log('TOKEN FROM CREATE PLAYLIST MIDDLEWARE', token);
     res.locals.token = token;
     // Minzo: need to have your own spotify dev account
     // added 1219159519 as minzo's spotify account as a hard code.
     //Rachel's userID: 	1240934213
-    fetch(`https://api.spotify.com/v1/users/${'1219159519'}/playlists`, {
+    // Alastair's userID: 22nkilsuc6ma2beir5pyhf7jq
+    // fetch(`https://api.spotify.com/v1/users/22nkilsuc6ma2beir5pyhf7jq/playlists`, {
+    fetch(`https://api.spotify.com/v1/users/${user}/playlists`, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${token}`,
@@ -51,12 +56,12 @@ spotifyController.createPlaylist = (req, res, next) => {
         }),
     })
         .then((response) => {
-            return response.json();
+          return response.json()
         })
         .then((result) => {
-            res.locals.playlist_id = result.id;
-            return next();
-        });
+          res.locals.playlist_id = result.id;
+          return next();
+    })
 };
 
 spotifyController.getRecommendations = (req, res, next) => {
