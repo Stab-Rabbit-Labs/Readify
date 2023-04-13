@@ -5,6 +5,7 @@ const oauthcontroller = require('./controllers/oauthcontroller');
 const cookieParser = require('cookie-parser');
 
 const cors = require('cors') 
+const dbController = require('./controller/dbController.js');
 
 const app = express();
 app.use(cors());
@@ -61,7 +62,7 @@ app.get('/dist/bundle.js', (req, res) => {
 
 // Minzo: on getting history, sends back info from DB to res.locals.
 
-app.get('/history', controller.sendDataBackToFront, (req, res) => {
+app.get('/history', dbController.sendDataBackToFront, (req, res) => {
     const historyData = res.locals.fromDB;
     res.status(200).send(historyData);
 });
