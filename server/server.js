@@ -1,6 +1,6 @@
 const path = require('path');
 const express = require('express');
-const controller = require('./controller');
+const dbController = require('./controller/dbController.js');
 
 const app = express();
 
@@ -46,7 +46,7 @@ app.get('/login', function (req, res) {
 
 // Minzo: on getting history, sends back info from DB to res.locals.
 
-app.get('/history', controller.sendDataBackToFront, (req, res) => {
+app.get('/history', dbController.sendDataBackToFront, (req, res) => {
     const historyData = res.locals.fromDB;
     res.status(200).send(historyData);
 });
