@@ -1,6 +1,5 @@
 # Readify
 
-The project consists of a web application that allows users to search for books and create personalized Spotify playlists based on the searched book's genre.
 
 ## Table of Contents
 
@@ -14,7 +13,7 @@ The project consists of a web application that allows users to search for books 
 
 ## Description
 
-The project is divided into a client-side and server-side application.
+The project consists of a web application that allows users to search for books and create personalized Spotify playlists based on the searched book's genre. Readify is divided into a client-side and server-side application.
 
 ### Client-side
 
@@ -96,6 +95,7 @@ The server exposes the following API endpoints:
 - PostgreSQL
 - Spotify API
 - Google Books API
+- Webpack
 
 ## Contributing
 
